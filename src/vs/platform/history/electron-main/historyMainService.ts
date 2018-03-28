@@ -14,17 +14,13 @@ import { app } from 'electron';
 import { ILogService } from 'vs/platform/log/common/log';
 import { getPathLabel, getBaseLabel } from 'vs/base/common/labels';
 import { IPath } from 'vs/platform/windows/common/windows';
-import CommonEvent, { Emitter } from 'vs/base/common/event';
+import { Event as CommonEvent, Emitter } from 'vs/base/common/event';
 import { isWindows, isMacintosh, isLinux } from 'vs/base/common/platform';
 import { IWorkspaceIdentifier, IWorkspacesMainService, getWorkspaceLabel, ISingleFolderWorkspaceIdentifier, isSingleFolderWorkspaceIdentifier, IWorkspaceSavedEvent } from 'vs/platform/workspaces/common/workspaces';
 import { IHistoryMainService, IRecentlyOpened } from 'vs/platform/history/common/history';
 import { IEnvironmentService } from 'vs/platform/environment/common/environment';
 import { isEqual } from 'vs/base/common/paths';
 import { RunOnceScheduler } from 'vs/base/common/async';
-
-export interface ILegacyRecentlyOpened extends IRecentlyOpened {
-	folders: string[]; // TODO@Ben migration
-}
 
 export class HistoryMainService implements IHistoryMainService {
 
@@ -179,9 +175,9 @@ export class HistoryMainService implements IHistoryMainService {
 		let files: string[];
 
 		// Get from storage
-		const storedRecents = this.stateService.getItem<IRecentlyOpened>(HistoryMainService.recentlyOpenedStorageKey) as ILegacyRecentlyOpened;
+		const storedRecents = this.stateService.getItem<IRecentlyOpened>(HistoryMainService.recentlyOpenedStorageKey);
 		if (storedRecents) {
-			workspaces = storedRecents.workspaces || storedRecents.folders || [];
+			workspaces = storedRecents.workspaces || [];
 			files = storedRecents.files || [];
 		} else {
 			workspaces = [];
@@ -281,7 +277,7 @@ export class HistoryMainService implements IHistoryMainService {
 		try {
 			app.setJumpList(jumpList);
 		} catch (error) {
-			this.logService.log('#setJumpList', error); // since setJumpList is relatively new API, make sure to guard for errors
+			this.logService.warn('#setJumpList', error); // since setJumpList is relatively new API, make sure to guard for errors
 		}
 	}
 }

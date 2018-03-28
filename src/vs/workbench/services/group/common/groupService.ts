@@ -8,7 +8,7 @@
 import { createDecorator, ServiceIdentifier, ServicesAccessor } from 'vs/platform/instantiation/common/instantiation';
 import { Position, IEditorInput } from 'vs/platform/editor/common/editor';
 import { IEditorStacksModel, IEditorGroup, IEditorOpeningEvent } from 'vs/workbench/common/editor';
-import Event from 'vs/base/common/event';
+import { Event } from 'vs/base/common/event';
 
 export enum GroupArrangement {
 	MINIMIZE_OTHERS,
@@ -26,6 +26,7 @@ export interface IEditorTabOptions {
 	showIcons?: boolean;
 	previewEditors?: boolean;
 	labelFormat?: 'default' | 'short' | 'medium' | 'long';
+	iconTheme?: string;
 }
 
 export interface IMoveOptions {
